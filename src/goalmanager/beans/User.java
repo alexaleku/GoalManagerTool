@@ -2,6 +2,8 @@ package goalmanager.beans;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 public class User {
 	private int id;
 	private String name;
