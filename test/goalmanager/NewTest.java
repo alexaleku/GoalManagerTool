@@ -1,9 +1,14 @@
 package goalmanager;
 
 import goalmanager.beans.Credentials;
+import goalmanager.beans.Goal;
 import goalmanager.beans.User;
+import goalmanager.controller.ControllerMain;
+import goalmanager.dao.FakeObjectsFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
@@ -19,7 +24,12 @@ public class NewTest {
 	@Test
 	public void f() {
 
+		new ControllerMain().getGoalListForUserActionsAndStatesIncluded(33);
 		Credentials cred = new Credentials();
+		Credentials cred1 = new Credentials();
+		List<Credentials> list = new ArrayList<>();
+		list.add(cred);
+		list.add(cred1);
 		// User user = DaoFakeData.getUserByID(1);
 		//
 		// List<Goal> goalList = DaoFakeData.getGoalListForUser(1);
@@ -29,14 +39,9 @@ public class NewTest {
 		//
 		// }
 		// user.setGoalList(goalList);
-		 ObjectMapper mapper = new ObjectMapper();
+		// ObjectMapper mapper = new ObjectMapper();
 		//
-		 try {
-		 mapper.writeValue(System.out, cred);
-		 } catch (IOException e) {
-		 // TODO Auto-generated catch block
-		 e.printStackTrace();
-		 }
+		//FakeObjectsFactory.printToConsole(list1);
 
 	}
 

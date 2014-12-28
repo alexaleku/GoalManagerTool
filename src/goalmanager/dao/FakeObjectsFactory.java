@@ -1,14 +1,23 @@
 package goalmanager.dao;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.codehaus.jackson.map.ObjectMapper;
+
 import goalmanager.beans.ActionLable;
 import goalmanager.beans.ActionType;
 import goalmanager.beans.Goal;
 import goalmanager.beans.GoalAction;
 import goalmanager.beans.Priority;
 import goalmanager.beans.User;
+import goalmanager.controller.ControllerMain;
 
 public class FakeObjectsFactory {
 
+	private final static Logger LOGGER = Logger.getLogger(ControllerMain.class.getName());
+	
 	public static User generateUser(int id, String name, String nickname,
 			String pass) {
 
@@ -80,10 +89,7 @@ public class FakeObjectsFactory {
 
 		return actionLable;
 	}
-	
-	
-	
-	
+
 	public static User generateDefaultUser() {
 		return generateUser(1, "Vlad", "vovan", "pass");
 	}
@@ -97,7 +103,9 @@ public class FakeObjectsFactory {
 	}
 
 	public static GoalAction generateDefaultGoalAction() {
-		return generateGoalAction(1, "goal action", "action group", "action desc", generateDefaultPriority(), generateDefaultActionLable(), generateDefaultActionType());
+		return generateGoalAction(1, "goal action", "action group",
+				"action desc", generateDefaultPriority(),
+				generateDefaultActionLable(), generateDefaultActionType());
 	}
 
 	public static ActionType generateDefaultActionType() {
@@ -106,5 +114,17 @@ public class FakeObjectsFactory {
 
 	public static ActionLable generateDefaultActionLable() {
 		return generateActionLable(1, "actionLable", "my act lable desc");
+	}
+
+	public static void printToConsole(Object objToPrint) {
+		ObjectMapper mapper = new ObjectMapper();
+		LOGGER.log(Level.INFO, "---------- printToConsole -------------");
+		//
+		try {
+			mapper.writeValue(System.out, objToPrint);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

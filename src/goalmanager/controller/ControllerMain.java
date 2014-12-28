@@ -6,8 +6,10 @@ import goalmanager.beans.Goal;
 import goalmanager.beans.GoalAction;
 import goalmanager.beans.User;
 import goalmanager.dao.DaoFakeData;
+import goalmanager.dao.FakeObjectsFactory;
 import goalmanager.dao.IDao;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,6 +22,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 // Will map the resource to the URL
 @Path("/")
@@ -39,7 +43,7 @@ public class ControllerMain {
 	}
 
 	@POST
-	@Path("getUserByCred")
+	@Path("userlogin")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public User getUserByCredentials(Credentials credentials) {
@@ -48,15 +52,30 @@ public class ControllerMain {
 	}
 
 	@GET
-	@Path("getGoalsForUser/{userId}")
+	@Path("user/{userId}/goals")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Goal> getGoalListForUserActionsAndStatesIncluded(@PathParam("userId") int userId) {
+		// User user = dao.getUserById(userId);
 		
-		return null;
+		 List<Goal> goalList = dao.getGoalListForUser(userId);
+		 
+		 for (Goal goal : goalList) {
+		
+		 goal.setActionList(dao.getActionListForGoalById(goal.getId()));
+		
+		 }
+		 
+		 // debug
+		 // FakeObjectsFactory.printToConsole(goalList);
+			 
+		return goalList;
 	}
 
-	public Goal addGoalForUser(int userId, Goal goal) {
-		// TODO Auto-generated method stub
+	@GET
+	@Path("user/{userId}/goal")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Goal addGoalForUser(@PathParam("userId") int userId, Goal goal) {
+		dao.createNewGoal(userId, goal);
 		return null;
 	}
 

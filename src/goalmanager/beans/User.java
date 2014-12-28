@@ -2,14 +2,12 @@ package goalmanager.beans;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 public class User {
 	private int id;
 	private String name;
 	private String nickname;
 	private String pass;
-	private List<Goal> goalList;
+	//private List<Goal> goalList;
 
 	public int getId() {
 		return id;
@@ -42,13 +40,4 @@ public class User {
 	public void setPass(String pass) {
 		this.pass = pass;
 	}
-
-	public List<Goal> getGoalList() {
-		return goalList;
-	}
-
-	public void setGoalList(List<Goal> goalList) {
-		this.goalList = goalList;
-	}
-
 }
