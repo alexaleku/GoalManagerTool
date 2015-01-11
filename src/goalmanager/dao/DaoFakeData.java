@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DaoFakeData implements IDao{
+public class DaoFakeData {
 
 
 	public List<Goal> getGoalListForUser(int userId) {
@@ -47,8 +47,8 @@ public class DaoFakeData implements IDao{
 		ActionType actionType = generateActionType(1, "action type1", "type1 desc");
 		
 		GoalAction goalAction1 = generateGoalAction(id, "action title1", "action group1", "action desc", priority1, actionLable, actionType);
-		GoalAction goalAction2 = generateGoalAction(id, "action title2", "action group2", "action desc", priority2, actionLable, actionType);
-		GoalAction goalAction3 = generateGoalAction(id, "action title3", "action group3", "action desc", priority3, actionLable, actionType);
+		GoalAction goalAction2 = generateGoalAction(id+1, "action title2", "action group2", "action desc", priority2, actionLable, actionType);
+		GoalAction goalAction3 = generateGoalAction(id+2, "action title3", "action group3", "action desc", priority3, actionLable, actionType);
 		
 		actionList.add(goalAction1);
 		actionList.add(goalAction2);
@@ -57,58 +57,5 @@ public class DaoFakeData implements IDao{
 		return actionList;
 	}
 
-	@Override
-	public boolean createNewUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public List<User> getUsers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public User getUserByCredentials(Credentials credentials) {
-		return  FakeObjectsFactory.generateUser(12, "SSS", credentials.getNickname(), credentials.getPass());
-	}
-
-	@Override
-	public void createNewGoal(int userId, Goal goal) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	
-//
-//	@Override
-//	public boolean createNewUser(User user) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public List<User> getUsers() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//	
-//	
-
-//
-//
-//
-//	public ActionStateDated getStateByActionIdForDate(int actionId, Date date) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public List<ActionStateDated> getActionStatesByPeriod(int actionId,
-//			Date startDateInclusive, int numberOfDates) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 }

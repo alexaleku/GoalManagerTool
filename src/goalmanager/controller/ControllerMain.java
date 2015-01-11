@@ -5,12 +5,10 @@ import goalmanager.beans.Credentials;
 import goalmanager.beans.Goal;
 import goalmanager.beans.GoalAction;
 import goalmanager.beans.User;
-import goalmanager.dao.DaoFakeData;
 import goalmanager.dao.FakeObjectsFactory;
 import goalmanager.dao.IDao;
+import goalmanager.dao.NewFakeDao;
 
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,15 +19,14 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import org.codehaus.jackson.map.ObjectMapper;
 
 // Will map the resource to the URL
 @Path("/")
 public class ControllerMain {
 	
-	private IDao dao = new DaoFakeData();
+	private IDao dao = new NewFakeDao();
 	
 	private final static Logger LOGGER = Logger.getLogger(ControllerMain.class.getName());
 	
@@ -51,104 +48,125 @@ public class ControllerMain {
 		return user;
 	}
 
+	
+	// API 
+	
+// get users
 	@GET
-	@Path("user/{userId}/goals")
+	@Path("users")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<Goal> getGoalListForUserActionsAndStatesIncluded(@PathParam("userId") int userId) {
+	public List<User> getUsers() {
+		List<User> userList = dao.getUsers();
+		return userList;
+	}
+
+// add a new user
+	@POST
+	@Path("users")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public User addUser() {
+		User user = dao.addUser();
+		return user;
+	}
+
+// update / delete user using a user resource file
+	@Path("users/{userId}")
+	public UserResource getUserResource(@PathParam("userId") int userId) {
+		LOGGER.log(Level.INFO, "--------------- get record requested, record id: " + userId+ "------------------");
+		return new UserResource(userId);
+	}
+	
+// get all goals for a user
+	@GET
+	@Path("users/{userId}/goals")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Goal> getGoalListForUser(@PathParam("userId") int userId) {
 		// User user = dao.getUserById(userId);
 		
 		 List<Goal> goalList = dao.getGoalListForUser(userId);
-		 
+		 FakeObjectsFactory.counter = 1;
 		 for (Goal goal : goalList) {
 		
-		 goal.setActionList(dao.getActionListForGoalById(goal.getId()));
+		 goal.setActionList(dao.getActionListForAGoal(33, goal.getId()));
 		
 		 }
+		 FakeObjectsFactory.counter = 1;
 		 
 		 // debug
 		 // FakeObjectsFactory.printToConsole(goalList);
 			 
 		return goalList;
 	}
-
-	@GET
-	@Path("user/{userId}/goal")
+	
+// post a new goal
+	@POST
+	@Path("users/{userId}/goals")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Goal addGoalForUser(@PathParam("userId") int userId, Goal goal) {
-		dao.createNewGoal(userId, goal);
-		return null;
-	}
-
-	public Goal updateGoalById(int goalId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Goal deleteGoalById(int goalId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public GoalAction addActionForGoal(int goalId, GoalAction goalAction) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public GoalAction updateActionById(int actionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public GoalAction deleteActionById(int actionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public ActionStateDated changeStateOfActionStateDatedBy(int actionId,
-			Date date) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<ActionStateDated> getStatesForActionForPeriod(int actionId,
-			Date startDateInclusive, int numberOfDates) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean createNewUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean updateUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public List<User> getUsers() {
-		// TODO Auto-generated method stub
-		return null;
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Goal addGoal(@PathParam("userId") int userId) {
+		Goal goal = dao.addGoal();
+		return goal;
 	}
 	
-	
-	// API 
-	@Path("user/{userId}")
-	public UserResource getUserResource(@PathParam("userId") int id) {
-		LOGGER.log(Level.INFO, "--------------- get record requested, record id: " + id+ "------------------");
-		return new UserResource(id);
+// update / delete a goal using GaolRecource class
+	@Path("users/{userId}/goals/{goalId}")
+	public GoalResource getGoalResource(@PathParam("userId") int userId, @PathParam("goalId") int goalId) {
+		LOGGER.log(Level.INFO, "--------------- get record requested, record id: " + userId + "------------------");
+		return new GoalResource(goalId);
 	}
 	
-	@Path("goal/{goalId}")
-	public GoalResource getGoalResource(@PathParam("goalId") int id) {
-		LOGGER.log(Level.INFO, "--------------- get record requested, record id: " + id+ "------------------");
-		return new GoalResource(id);
+// get goal actions list for a goal
+	@GET
+	@Path("users/{userId}/goals/{goalId}/actions")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<GoalAction> getActionListForGoal(@PathParam("userId") int userId, @PathParam("goalId") int goalId) {
+		
+		List<GoalAction> goalList = dao.getActionListForAGoal(userId, goalId);
+		
+		return goalList;
+	}
+	
+// add a goal action for a goal
+	@POST
+	@Path("users/{userId}/goals/{goalId}/actions")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public GoalAction addGoalAction(@PathParam("userId") int userId, @PathParam("goalId") int goalId) {
+		GoalAction goalAction = dao.addGoalAction();
+		return goalAction;
 	}
 
-	@Path("action/{actionId}")
-	public ActionResource getActionResource(@PathParam("actionId") int id) {
-		LOGGER.log(Level.INFO, "--------------- get record requested, record id: " + id+ "------------------");
-		return new ActionResource(id);
+// update / delete a goal action using ActionResource class
+	@Path("users/{userId}/goals/{goalId}/actions/{actionId}")
+	public ActionResource getActionResource(@PathParam("userId") int userId, @PathParam("goalId") int goalId, @PathParam("actionId") int actionId) {
+		LOGGER.log(Level.INFO, "--------------- get record requested, record id: " + actionId+ "------------------");
+		return new ActionResource(actionId);
+	}
+	
+// get action states for some period of time
+	@GET
+	@Path("users/{userId}/goals/{goalId}/actions/{actionId}/states")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<ActionStateDated> getActionSates(@PathParam("userId") int userId, @PathParam("goalId") int goalId, @PathParam("actionId") int actionId, @QueryParam("from") String fromDate, @QueryParam("duration") String duration) {
+		List<ActionStateDated> actionList = dao.getStatesListForAnAction(actionId, fromDate, duration);
+		return actionList;
+	}
+	
+	@POST
+	@Path("users/{userId}/goals/{goalId}/actions/{actionId}/states")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ActionStateDated addActionSate(@PathParam("userId") int userId, @PathParam("goalId") int goalId, @PathParam("actionId") int actionId) {
+		ActionStateDated actionStateDated = dao.addActionStateDated();
+		return actionStateDated;
+	}
+	
+// update / delete a state using ActionStateDatedResource class
+	@Path("users/{userId}/goals/{goalId}/actions/{actionId}/states/{stateId}")
+	public ActionStateDatedResource changeActionSate(@PathParam("userId") int userId, @PathParam("goalId") int goalId, @PathParam("actionId") int actionId, @PathParam("stateId") int stateId) {
+		LOGGER.log(Level.INFO, "--------------- get record requested, record id: " + stateId+ "------------------");
+		return new ActionStateDatedResource(stateId);
 	}
 	
 }

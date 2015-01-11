@@ -1,33 +1,55 @@
-define(['libs/text!templates/goalSection.html', 'views/goalRecordView', 'models/goalModel', 'libs/text!json/model.json', 'plugins/jquery-sortable-min'], function(goalSectionTmpl, GoalRecord, GoalCollection, json, drag) {
+define(['libs/text!templates/goalSection.html', 'views/goalRecordView', 'models/goalModel', 'libs/text!json/model.json', 'plugins/jquery-sortable-min', 'views/actionsSectionView', 'views/actionRecordView'], function(goalSectionTmpl, GoalRecord, GoalCollection, json, drag, ActionsSectionView, ActionRecord) {
     var GoalSectionView = Backbone.View.extend({
-        el : "#content",
-        template : _.template($(goalSectionTmpl).html()),
-        render : function() {
-            this.$el.html(this.template);
-
-            
-            _.each(this.goalCollection.models, function(goalModel) {
-
-                goalRecord = new GoalRecord({
-                    model : goalModel
-                });
-                this.$('#itemslist').append(goalRecord.render().el);
-
-            });
-            this.input = this.$('#new-todo');
-           console.log(this.input);
-        },
-
-        initialize : function() {
-            this.goalCollection = new GoalCollection();
+        initialize : function(userId) {
+        	this.template = _.template($(goalSectionTmpl).html());
+            this.goalCollection = new GoalCollection(userId);
             
             // when new elements are added to the collection render then with addOne
             this.goalCollection.on('add', this.addOne, this);
             this.goalCollection.on('reset', this.addAll, this);
-            this.goalCollection.fetch();
-            
-            // Loads list from local storage
+          // this.goalCollection.fetch();
         },
+     // render function for population the el object of the view, then external code will decide how and where to show the view (in which element to insert it or which element to assign to it, so we don't specifying existing dom element here because this would be hard coupling to index html)
+        render : function() {
+        	console.log('goalSection render started');
+        	
+            this.$el.html('Loading...');
+            
+            var self = this;
+            
+            this.goalCollection.fetch().done( function(){
+            	
+            	console.log('fetch done');
+            	
+            	
+                self.showgoalsection();
+                //можно переписать все петли с помощью this.collection.each(this.addItem, this) и тогда переместить тело петель в другие методы объекта GoalSectionView (определить функции как новые свойства (как render))
+            	
+               // _.each(self.goalCollection.models, function(goalModel) {
+                self.goalCollection.each(function(goalModel) {
+            	self.showgoal(goalModel);
+            	self.showactions(goalModel);
+            	 }); 
+                 });
+            return this;
+        },
+        showgoalsection : function() {
+        	this.$el.html(this.template());
+            this.input = this.$('#new-todo');
+        },
+        showgoal : function(goalModel) {
+                var goalRecord = new GoalRecord({
+                    model : goalModel
+                });
+                this.$('#itemslist').append(goalRecord.render().el);
+        },
+        showactions : function(goalModel) {
+            var actionsSectionView = new ActionsSectionView({
+                model : goalModel
+            });
+             this.$('#actionGroups').append(actionsSectionView.render().el);
+        },
+        
         events : {
             'keypress #new-todo' : 'createTodoOnEnter'
         },

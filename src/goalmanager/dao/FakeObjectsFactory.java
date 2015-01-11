@@ -1,12 +1,16 @@
 package goalmanager.dao;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
 import goalmanager.beans.ActionLable;
+import goalmanager.beans.ActionStateDated;
+import goalmanager.beans.ActionStateType;
 import goalmanager.beans.ActionType;
 import goalmanager.beans.Goal;
 import goalmanager.beans.GoalAction;
@@ -15,6 +19,7 @@ import goalmanager.beans.User;
 import goalmanager.controller.ControllerMain;
 
 public class FakeObjectsFactory {
+	public static int counter = 0;
 
 	private final static Logger LOGGER = Logger.getLogger(ControllerMain.class.getName());
 	
@@ -67,6 +72,14 @@ public class FakeObjectsFactory {
 
 		return goalAction;
 	}
+	
+	public static ActionStateDated generateActionStateDated(int i,
+			String string, String string2, ActionStateType state) {
+		ActionStateDated actionStateDated = new ActionStateDated();
+		actionStateDated.setDate("date");
+		actionStateDated.setState(state);
+		return actionStateDated;
+	}
 
 	public static ActionType generateActionType(int id, String name,
 			String image) {
@@ -95,7 +108,7 @@ public class FakeObjectsFactory {
 	}
 
 	public static Goal generateDefaultGoal() {
-		return generateGoal(1, "bestGoal", "my goal", generateDefaultPriority());
+		return generateGoal(new Random().nextInt(), "bestGoal", "my goal", generateDefaultPriority());
 	}
 
 	public static Priority generateDefaultPriority() {
@@ -103,7 +116,7 @@ public class FakeObjectsFactory {
 	}
 
 	public static GoalAction generateDefaultGoalAction() {
-		return generateGoalAction(1, "goal action", "action group",
+		return generateGoalAction(counter, "title"+String.valueOf(counter), "action group"+String.valueOf(counter++),
 				"action desc", generateDefaultPriority(),
 				generateDefaultActionLable(), generateDefaultActionType());
 	}
@@ -114,6 +127,18 @@ public class FakeObjectsFactory {
 
 	public static ActionLable generateDefaultActionLable() {
 		return generateActionLable(1, "actionLable", "my act lable desc");
+	}
+
+	public static ActionStateDated generateDefaultActionStateDated() {
+		return generateActionStateDated(1, "actionState", "asdfasdf", generateDefaultActionStateType());
+	}
+	
+	public static ActionStateType generateDefaultActionStateType() {
+		ActionStateType actionStateType = new ActionStateType();
+		actionStateType.setId(11);
+		actionStateType.setName("awdfawdf");
+		actionStateType.setImage("asdfasdf");
+		return actionStateType;
 	}
 
 	public static void printToConsole(Object objToPrint) {

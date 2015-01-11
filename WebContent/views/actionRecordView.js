@@ -1,7 +1,9 @@
-define(['libs/text!templates/goalRecord.html'], function(goalRecordTmpl) {
-    var GoalRecordView = Backbone.View.extend({
+define(['libs/text!templates/actionRecord.html'], function(actionRecordTmpl) {
+    var ActionRecordView = Backbone.View.extend({
         tagName : "li",
-        template : _.template($(goalRecordTmpl).html()),
+        template : _.template($(actionRecordTmpl).html()),
+           initialize : function() {
+        },
         render : function() {
             console.log(this.model.toJSON());
             this.$el.html(this.template(this.model.toJSON()));
@@ -9,10 +11,6 @@ define(['libs/text!templates/goalRecord.html'], function(goalRecordTmpl) {
             this.input.hide();
             return this;
             // to enable chained calls
-        },
-        initialize : function() {
-            this.model.on('change', this.render, this);
-            this.model.on('destroy', this.remove, this);
         },
         events : {
             'dblclick .input_title' : 'edit',
@@ -44,5 +42,5 @@ define(['libs/text!templates/goalRecord.html'], function(goalRecordTmpl) {
             this.model.destroy();
         }
     });
-    return GoalRecordView;
+    return ActionRecordView;
 });

@@ -2,7 +2,7 @@ package goalmanager.beans;
 
 public class ActionStateDated {
 	private String date;
-	private ActionState state;
+	private ActionStateType state;
 
 	public String getDate() {
 		return date;
@@ -12,11 +12,11 @@ public class ActionStateDated {
 		this.date = date;
 	}
 
-	public ActionState getState() {
+	public ActionStateType getState() {
 		return state;
 	}
 
-	public void setState(ActionState state) {
+	public void setState(ActionStateType state) {
 		this.state = state;
 	}
 

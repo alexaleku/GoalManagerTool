@@ -1,12 +1,16 @@
 /* prevent zoom in mobile */
 
-#sort-it ol {
+.section_list ol {
 	/* list style is faked with number inputs */
 	list-style: none;
 	padding: 0;
 }
 
-#sort-it li {
+.states_collection {
+	display: inline;
+}
+
+.section_list li {
 	position: relative;
 	min-height: 1em;
 	cursor: move;
@@ -18,7 +22,7 @@
 	/*max-width: 14em;*/
 }
 
-#sort-it li label {
+.section_list li label {
 	/* visually hidden offscreen so it still benefits screen readers */
 	position: absolute;
 	left: -9999px;
@@ -26,13 +30,13 @@
 
 /* sortable plugin styles when dragged */
 
-#sort-it .dragged {
+.dragged {
 	position: absolute;
 	opacity: 0.5;
 	z-index: 2000;
 }
 
-#sort-it li.placeholder {
+.section_list li.placeholder {
 	position: relative;
 	background: purple;
 }
